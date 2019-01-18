@@ -46,3 +46,7 @@ fun randomConnectedGraph(nodes: Int, edges: Int, maxWeight: Int = 100): List<Nod
     }
     return nodesList
 }
+
+fun clearNodes(nodes: List<Node>) {
+    nodes.forEach { it.distance = Integer.MAX_VALUE }
+}

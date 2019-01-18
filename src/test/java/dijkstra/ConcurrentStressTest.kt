@@ -13,7 +13,7 @@ class ConcurrentStressTest {
 
     @Test
     fun `test on very graphs`() {
-        testOnRandomGraphs(6, 25)
+        testOnRandomGraphs(16, 25)
     }
 
     @Test
@@ -33,12 +33,16 @@ class ConcurrentStressTest {
             repeat(SEARCHES) {
                 val from = nodesList[r.nextInt(nodes)]
                 val to = nodesList[r.nextInt(nodes)]
-                assertEquals(from.shortestPathSequential(to), from.shortestPathParallel(to))
+                val seqRes = shortestPathSequential(from, to)
+                clearNodes(nodesList)
+                val parRes = shortestPathParallel(from, to)
+                clearNodes(nodesList)
+                assertEquals(seqRes, parRes)
             }
         }
     }
 
 }
 
-private const val GRAPHS = 100
+private const val GRAPHS = 10
 private const val SEARCHES = 100

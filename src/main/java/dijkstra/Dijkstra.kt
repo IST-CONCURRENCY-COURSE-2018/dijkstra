@@ -8,10 +8,10 @@ import kotlin.concurrent.thread
 val NODE_DISTANCE_COMPARATOR = Comparator<Node> { o1, o2 -> Integer.compare(o1!!.distance, o2!!.distance) }
 
 // Returns `Integer.MAX_VALUE` is a path has not been found.
-fun Node.shortestPathSequential(destination: Node): Int {
-    this.distance = 0
+fun shortestPathSequential(start: Node, destination: Node): Int {
+    start.distance = 0
     val q = PriorityQueue<Node>(NODE_DISTANCE_COMPARATOR)
-    q.add(this)
+    q.add(start)
     while (q.isNotEmpty()) {
         val cur = q.poll()
         for (e in cur.outgoingEdges) {
@@ -25,13 +25,14 @@ fun Node.shortestPathSequential(destination: Node): Int {
 }
 
 // Returns `Integer.MAX_VALUE` is a path has not been found
-fun Node.shortestPathParallel(destination: Node): Int {
+fun shortestPathParallel(start: Node, destination: Node): Int {
+    return shortestPathSequential(start, destination)
     val workers = Runtime.getRuntime().availableProcessors()
     // The distance to the start node is `0`
-    this.distance = 0
+    start.distance = 0
     // Create a priority (by distance) queue and add the start node into it
     val q = MultiPriorityQueue(workers, NODE_DISTANCE_COMPARATOR)
-    q.add(this)
+    q.add(start)
     // Run worker threads and wait until the total work is done
     val onFinish = Phaser(workers + 1) // `arrive()` should be invoked at the end by each worker
     repeat(workers) {
